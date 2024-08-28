@@ -9,10 +9,6 @@ test.beforeEach(async ({ page }) => {
   })
 
   await page.goto('https://conduit.bondaracademy.com/')
-  await page.getByText('Sign in').click()
-  await page.getByRole('textbox', { name: "Email" }).fill('username100@gmail.com')
-  await page.getByRole('textbox', { name: "Password" }).fill('username100@gmail.com')
-  await page.getByRole('button').click()
 })
 
 test('has title', async ({ page }) => {
@@ -55,19 +51,19 @@ test('delete article', async ({ page, request }) => {
 
   await page.getByText('Global Feed').click()
   await page.getByText('This is a test title').click()
-  await page.getByRole('button', { name: 'Delete Article' }).first().click()
+  await page.getByRole('button', {name: 'Delete Article'}).first().click()
   await page.getByText('Global Feed').click()
-
+  
   await expect(page.locator('app-article-list h1').first()).not.toContainText('This is a test title')
 })
 
-test('create article', async ({ page, request }) => {
+test('create article', async ({page, request})=>{
   await page.getByText('New Article').click()
-  await page.getByRole('textbox', { name: 'Article Title' }).fill('Playwright is awesome')
-  await page.getByRole('textbox', { name: 'What\'s this article about?' }).fill('About the Playwright')
-  await page.getByRole('textbox', { name: 'Write your article (in markdown)' }).fill('We like to use playwright for automation')
-  await page.getByRole('button', { name: 'Publish Article' }).click()
-  const articleResponse = await page.waitForResponse('https://conduit-api.bondaracademy.com/api/articles/')
+  await page.getByRole('textbox', {name: 'Article Title'}).fill('Playwright is awesome')
+  await page.getByRole('textbox', {name: 'What\'s this article about?'}).fill('About the Playwright')
+  await page.getByRole('textbox', {name: 'Write your article (in markdown)'}).fill('We like to use playwright for automation')
+  await page.getByRole('button', {name: 'Publish Article'}).click()
+  const articleResponse =  await page.waitForResponse('https://conduit-api.bondaracademy.com/api/articles/')
   const articleResponseBody = await articleResponse.json()
   const slugID = articleResponseBody.article.slug
 
@@ -85,7 +81,7 @@ test('create article', async ({ page, request }) => {
   const responseBody = await response.json()
   const accessToken = responseBody.user.token
 
-  const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugID}`, {
+ const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugID}`, {
     headers: {
       Authorization: `Token ${accessToken}`
     }
